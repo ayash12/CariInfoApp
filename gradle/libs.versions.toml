@@ -71,6 +71,7 @@ room-ktx = { group = "androidx.room", name ="room-ktx", version.ref = "room" }
 # Hilt
 hilt-android = { group = "com.google.dagger", name ="hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name ="hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
 
 # Coroutine
 coroutines-android = { group = "org.jetbrains.kotlinx", name ="kotlinx-coroutines-android", version.ref = "coroutines" }

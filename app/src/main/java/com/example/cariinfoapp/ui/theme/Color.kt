@@ -2,10 +2,18 @@ package com.example.cariinfoapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Light Colors
+val PrimaryLight = Color(0xFF1976D2)
+val OnPrimaryLight = Color.White
+val SecondaryLight = Color(0xFF03DAC5)
+val BackgroundLight = Color(0xFFF6F6F6)
+val SurfaceLight = Color.White
+val OnSurfaceLight = Color(0xFF1A1A1A)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Dark Colors
+val PrimaryDark = Color(0xFF90CAF9)
+val OnPrimaryDark = Color(0xFF0D47A1)
+val SecondaryDark = Color(0xFF03DAC5)
+val BackgroundDark = Color(0xFF121212)
+val SurfaceDark = Color(0xFF1E1E1E)
+val OnSurfaceDark = Color(0xFFEFEFEF)
