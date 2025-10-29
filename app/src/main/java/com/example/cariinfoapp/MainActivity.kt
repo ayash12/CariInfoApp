@@ -4,8 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.example.cariinfoapp.ui.features.home.HomeScreen
 import com.example.cariinfoapp.ui.features.model.InfoViewModel
+import com.example.cariinfoapp.ui.navigation.AppNavHost
 import com.example.cariinfoapp.ui.theme.CariInfoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,7 +22,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CariInfoAppTheme {
-                    HomeScreen()
+                Surface(
+                    modifier = Modifier,
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    AppNavHost(navController = navController)
+                }
             }
         }
     }
