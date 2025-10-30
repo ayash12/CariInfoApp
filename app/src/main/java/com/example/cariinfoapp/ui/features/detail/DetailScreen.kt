@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
@@ -44,7 +45,9 @@ fun DetailScreen(
                 contentDescription = article.title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp)
+                    .height(220.dp),
+                placeholder = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder),
+                error = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
