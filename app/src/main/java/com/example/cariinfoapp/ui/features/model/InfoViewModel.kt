@@ -4,21 +4,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cariinfoapp.data.database.model.Article
 import com.example.cariinfoapp.data.network.repository.InfoRepository
-import com.example.cariinfoapp.ui.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed class UiState {
+    object Loading : UiState()
+    data class Success(val articles: List<Article>) : UiState()
+    data class Error(val message: String) : UiState()
+}
 
 @HiltViewModel
 class InfoViewModel @Inject constructor(
     private val repository: InfoRepository
 ) : ViewModel() {
+    private val _articles = MutableStateFlow<UiState>(UiState.Loading)
+    val articles: StateFlow<UiState> = _articles.asStateFlow()
 
-
-    private val _articles = MutableStateFlow< UiState<List<Article>>>(UiState.Loading)
-    val articles: StateFlow<UiState<List<Article>>> = _articles
+    // Shared selection for DetailScreen
+    private val _selectedArticle = MutableStateFlow<Article?>(null)
+    val selectedArticle: StateFlow<Article?> = _selectedArticle.asStateFlow()
 
     fun fetchTopHeadlines() {
         viewModelScope.launch {
@@ -27,8 +35,17 @@ class InfoViewModel @Inject constructor(
                 val headlines = repository.getTopHeadlines()
                 _articles.value = UiState.Success(headlines)
             }catch (e: Exception) {
-                _articles.value = UiState.Error(e.message ?: "Unknown error")
+                _articles.value = UiState.Error(e.localizedMessage ?: "Unknown error")
             }
         }
+    }
+
+
+    fun selectArticle(article: Article) {
+        _selectedArticle.value = article
+    }
+
+    fun clearSelectedArticle() {
+        _selectedArticle.value = null
     }
 }
