@@ -8,12 +8,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.cariinfoapp.data.database.model.Article
 import com.example.cariinfoapp.ui.features.model.InfoViewModel
-import com.example.cariinfoapp.ui.state.UiState
+import com.example.cariinfoapp.ui.features.model.UiState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,15 +36,15 @@ fun HomeScreen(viewModel: InfoViewModel = hiltViewModel(),
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(padding)) {
-            when(articles){
+
+            when (articles) {
                 is UiState.Loading -> LoadingView()
                 is UiState.Success -> {
-                    val list = (articles as UiState.Success).data
+                    val list = (articles as UiState.Success).articles
                     ArticleList(articles = list, onItemClick = onArticleClick)
                 }
                 is UiState.Error -> {
-                    val msg = (articles as UiState.Error).message
-                    ErrorView(message = msg)
+                    ErrorView((articles as UiState.Error).message) { viewModel.fetchTopHeadlines() }
                 }
             }
 
@@ -51,21 +55,21 @@ fun HomeScreen(viewModel: InfoViewModel = hiltViewModel(),
 
 @Composable
 fun LoadingView() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
-fun ErrorView(message: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+fun ErrorView(message: String, onRetry: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Error: $message", color = MaterialTheme.colorScheme.error)
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = onRetry) { Text("Retry") }
     }
 }
 
@@ -82,19 +86,24 @@ fun ArticleList(
 }
 
 @Composable
-fun ArticleCard(article: Article, onClick: () -> Unit) {
+fun ArticleCard(article: Article, onClick: () -> Unit,isLoading: Boolean = false) {
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable(enabled = !isLoading) { if (!isLoading) onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row(modifier = Modifier.padding(12.dp)) {
+        Row(modifier = Modifier
+            .padding(12.dp)
+            .placeholder(visible = isLoading, highlight = PlaceholderHighlight.shimmer())
+        ) {
             AsyncImage(
                 model = article.urlToImage,
                 contentDescription = article.title,
-                modifier = Modifier.size(88.dp)
+                modifier = Modifier.size(88.dp),
+                placeholder = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder),
+                error = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder)
             )
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
