@@ -8,9 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.cariinfoapp.ui.features.home.HomeScreen
 import com.example.cariinfoapp.ui.features.model.InfoViewModel
-import com.example.cariinfoapp.ui.navigation.AppNavHost
+import com.example.cariinfoapp.ui.navigation.AppNav
 import com.example.cariinfoapp.ui.theme.CariInfoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: InfoViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    AppNavHost(navController = navController)
+                    AppNav(navController = navController, viewModel = viewModel)
                 }
             }
         }
