@@ -85,6 +85,9 @@ dependencies {
     // Coil
     implementation(libs.coil)
 
+    // Accompanists
+    implementation(libs.accompanist.placeholder)
+
     // Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
