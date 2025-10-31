@@ -70,8 +70,8 @@ dependencies {
     implementation(libs.okhttp.logging)
 
     // Room
-    //implementation(libs.room.runtime)
-    //kapt(libs.room.compiler)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
     implementation(libs.room.ktx)
 
     // Hilt
