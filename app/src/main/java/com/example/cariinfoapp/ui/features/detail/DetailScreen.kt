@@ -1,61 +1,33 @@
 package com.example.cariinfoapp.ui.features.detail
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import android.content.Intent
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
+import com.example.cariinfoapp.data.database.model.Article
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    article: com.example.cariinfoapp.data.database.model.Article?,
+    article: Article?,
     onBack: () -> Unit
 ) {
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(article?.title ?: "Detail") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
+            DetailTopBar(
+                onBack = onBack,
+                articleUrl = article?.url,
             )
         }
     ) { padding ->
-        if (article == null) {
-            Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                Text("Article not available")
-            }
-            return@Scaffold
-        }
-
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
-
-            AsyncImage(
-                model = article.urlToImage,
-                contentDescription = article.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp),
-                placeholder = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder),
-                error = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = article.title ?: "-", style = MaterialTheme.typography.headlineSmall)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = article.publishedAt ?: "-", style = MaterialTheme.typography.labelSmall)
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = article.description ?: "-", style = MaterialTheme.typography.bodyLarge)
+        when {
+            article == null -> DetailEmptyView(modifier = Modifier.padding(padding))
+            else -> DetailContent(article = article, modifier = Modifier.padding(padding))
         }
     }
 }
