@@ -25,25 +25,25 @@ Dibangun menggunakan arsitektur **MVVM + Repository Pattern**, dengan dukungan *
 ## ✨ Fitur Utama
 
 - 📰 **Home Screen**
-   - Menampilkan daftar berita dalam bentuk **Card Compose** (gambar, judul, penulis, tanggal, deskripsi).
-   - **Swipe to Refresh (Material 3 PullToRefreshBox)** untuk memuat ulang data.
-   - **Shimmer Loading** saat data dimuat pertama kali.
-   - **Empty State** dan **Error State** dengan tampilan modern.
-   - Toggle **Dark / Light Mode** langsung dari TopBar.
+  - Menampilkan daftar berita dalam bentuk **Card Compose** (gambar, judul, penulis, tanggal, deskripsi).
+  - **Swipe to Refresh (Material 3 PullToRefreshBox)** untuk memuat ulang data.
+  - **Shimmer Loading** saat data dimuat pertama kali.
+  - **Empty State** dan **Error State** dengan tampilan modern.
+  - Toggle **Dark / Light Mode** langsung dari TopBar.
 
 - 📄 **Detail Screen**
-   - Menampilkan detail lengkap artikel (gambar header, judul, penulis, tanggal, deskripsi).
-   - Tombol **Baca Selengkapnya** membuka tautan di browser.
-   - **Icon Share** di TopBar untuk membagikan berita.
-   - Konten dapat di-scroll sepenuhnya.
+  - Menampilkan detail lengkap artikel (gambar header, judul, penulis, tanggal, deskripsi).
+  - Tombol **Baca Selengkapnya** membuka tautan di browser.
+  - **Icon Share** di TopBar untuk membagikan berita.
+  - Konten dapat di-scroll sepenuhnya.
 
 - 🌙 **Tema & Tipografi**
-   - Palet warna konsisten Material 3.
-   - Typography: `titleLarge`, `bodyMedium`, `labelSmall`.
+  - Palet warna konsisten Material 3.
+  - Typography: `titleLarge`, `bodyMedium`, `labelSmall`.
 
 - 💾 **Offline Mode**
-   - Data berita disimpan di database lokal Room.
-   - Jika offline, aplikasi tetap dapat menampilkan data terakhir.
+  - Data berita disimpan di database lokal Room.
+  - Jika offline, aplikasi tetap dapat menampilkan data terakhir.
 
 ---
 
@@ -111,16 +111,12 @@ com.example.cariinfoapp
 
 ---
 
-## 🧪 Quality & Testing (Sprint 5 Review)
 
-✅ AppBar & Navigation modern (CenterAlignedTopAppBar)  
-✅ Swipe Refresh Material 3 menggantikan tombol refresh  
-✅ Shimmer Loading menggantikan CircularProgressIndicator  
-✅ Clean architecture dengan pemisahan `HomeContent`, `ArticleCard`, `DetailComponents`  
-✅ Dark mode toggle berfungsi penuh  
-✅ Error & Empty state UI responsif  
-✅ DetailScreen lebih ringkas & modular  
-✅ Semua sesuai dengan target Sprint 5 (UI/UX Polish & Presentation Ready)
+## 📸 Screenshot Aplikasi
+
+| Home Screen Light | Home Screen Dark | Detail Screen Light | Detail Screen Dark |
+|------------|------------|------------|------------|
+| ![HomeLight](https://github.com/username/CariInfoApp/assets/hs_light.png) | ![HomeDark](https://github.com/username/CariInfoApp/assets/hs_dark.png) | ![DetailLight](https://github.com/username/CariInfoApp/assets/ds_light.png) | ![DetailDark](https://github.com/username/CariInfoApp/assets/ds_dark.png) |
 
 ---
 
