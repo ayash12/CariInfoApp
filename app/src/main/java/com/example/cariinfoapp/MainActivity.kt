@@ -6,10 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.example.cariinfoapp.ui.features.model.InfoViewModel
-import com.example.cariinfoapp.ui.navigation.AppNav
+import com.example.cariinfoapp.ui.navigation.AppNavHost
 import com.example.cariinfoapp.ui.theme.CariInfoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,13 +21,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CariInfoAppTheme {
-                Surface(
-                    modifier = Modifier,
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    AppNav(navController = navController, viewModel = viewModel)
+            // theme toggle state (activity-scoped)
+            val isDark = remember { mutableStateOf(false) }
+
+            CariInfoAppTheme(darkTheme = isDark.value) {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    AppNavHost(
+                        viewModel = viewModel,
+                        isDarkMode = isDark.value,
+                        onToggleTheme = { isDark.value = !isDark.value }
+                    )
                 }
             }
         }

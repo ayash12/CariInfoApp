@@ -14,25 +14,3 @@ object NavRoutes {
     const val DETAIL = "detail"
 }
 
-@Composable
-fun AppNav(navController: NavHostController, viewModel: InfoViewModel) {
-    NavHost(navController = navController, startDestination = NavRoutes.HOME) {
-        composable(NavRoutes.HOME) {
-            HomeScreen(
-                viewModel = viewModel,
-                onArticleClick = { article ->
-                    viewModel.selectArticle(article)         // set shared state
-                    navController.navigate(NavRoutes.DETAIL)
-                }
-            )
-        }
-
-        composable(NavRoutes.DETAIL) {
-            val article = viewModel.selectedArticle.collectAsState().value
-            DetailScreen(article = article, onBack = {
-                // optional: viewModel.clearSelectedArticle()
-                navController.popBackStack()
-            })
-        }
-    }
-}
