@@ -1,7 +1,7 @@
 # 📰 CariInfoApp
 
-Aplikasi Android berbasis **Jetpack Compose** untuk menampilkan berita terbaru dari berbagai sumber.  
-Dibangun dengan arsitektur **MVVM + Repository Pattern** menggunakan **Kotlin**, **Coroutines**, dan **Retrofit**.
+**CariInfoApp** adalah aplikasi portal berita berbasis **Jetpack Compose (Material 3)** yang menampilkan berita terkini dari berbagai sumber.  
+Dibangun menggunakan arsitektur **MVVM + Repository Pattern**, dengan dukungan **offline cache (Room)**, **Hilt DI**, dan **modern UI Compose**.
 
 ---
 
@@ -9,84 +9,41 @@ Dibangun dengan arsitektur **MVVM + Repository Pattern** menggunakan **Kotlin**,
 
 | Layer | Teknologi |
 |-------|------------|
-| **UI** | Jetpack Compose, Material 3 |
-| **Architecture** | MVVM, StateFlow, Repository Pattern |
+| **UI** | Jetpack Compose, Material 3, Pull-to-Refresh |
+| **Architecture** | MVVM, Repository Pattern |
+| **Async / State** | Kotlin Coroutines, Flow, StateFlow |
+| **Dependency Injection** | Hilt |
 | **Networking** | Retrofit + OkHttp |
-| **Dependency Injection (Sprint 2)** | Hilt |
-| **Async / Concurrency** | Kotlin Coroutines |
-| **Image Loading (Sprint 2)** | Coil |
-| **Navigation (Sprint 2)** | Navigation Compose |
-| **Data Persistence (Sprint 3)** | Room Database |
+| **Database (Offline Cache)** | Room |
+| **Image Loading** | Coil |
+| **Navigation** | Navigation Compose |
+| **Theming** | Material 3 + Dark Mode Toggle |
+| **UI Skeleton** | Accompanist Placeholder (Shimmer) |
 
 ---
 
-## 🧩 Fitur Utama (Sprint 1)
+## ✨ Fitur Utama
 
-- Menampilkan daftar berita menggunakan API.  
-- Arsitektur MVVM terpisah antara ViewModel, Repository, dan UI.  
-- Integrasi `Retrofit` untuk koneksi API.  
-- Data ditampilkan melalui `HomeScreen` menggunakan **Jetpack Compose**.  
-- Struktur kode modular dan scalable.
+- 📰 **Home Screen**
+   - Menampilkan daftar berita dalam bentuk **Card Compose** (gambar, judul, penulis, tanggal, deskripsi).
+   - **Swipe to Refresh (Material 3 PullToRefreshBox)** untuk memuat ulang data.
+   - **Shimmer Loading** saat data dimuat pertama kali.
+   - **Empty State** dan **Error State** dengan tampilan modern.
+   - Toggle **Dark / Light Mode** langsung dari TopBar.
 
----
+- 📄 **Detail Screen**
+   - Menampilkan detail lengkap artikel (gambar header, judul, penulis, tanggal, deskripsi).
+   - Tombol **Baca Selengkapnya** membuka tautan di browser.
+   - **Icon Share** di TopBar untuk membagikan berita.
+   - Konten dapat di-scroll sepenuhnya.
 
-## 📅 Rencana Sprint
+- 🌙 **Tema & Tipografi**
+   - Palet warna konsisten Material 3.
+   - Typography: `titleLarge`, `bodyMedium`, `labelSmall`.
 
-### ✅ **Sprint 1 (Selesai)**
-> _Fokus pada pondasi arsitektur dan integrasi data API._
-
-- [x] Setup project & package structure  
-- [x] Setup Retrofit client  
-- [x] Buat `InfoRepository` untuk fetch data berita  
-- [x] Buat `InfoViewModel` dengan `StateFlow`  
-- [x] Implement `HomeScreen` Compose  
-- [x] Integrasi `MainActivity` dengan `InfoViewModel`
-
----
-
-### 🚧 **Sprint 2 (Sedang Berjalan)**
-> _Fokus pada peningkatan arsitektur dan tampilan._
-
-- [ ] Integrasi Hilt (Dependency Injection)  
-- [ ] Buat state management (`UiState`: Loading, Success, Error)  
-- [ ] Improve UI tampilan artikel (Material 3 + Coil)  
-- [ ] Implementasi navigasi ke `DetailScreen`  
-- [ ] Tambahkan error handling & fitur refresh  
-- [ ] Polishing tampilan (dark mode, typography)  
-
----
-
-### 🧠 **Sprint 3 (Rencana Berikutnya)**
-> _Fokus pada fitur lanjutan dan optimasi._
-
-- [ ] Tambahkan penyimpanan offline (Room Database)  
-- [ ] Tambahkan pencarian berita  
-- [ ] Tambahkan filter kategori  
-- [ ] Tambahkan unit test (ViewModel & Repository)  
-- [ ] CI/CD setup (GitHub Actions)
-
----
-
-## 🧱 Struktur Project (Ringkas)
-
-```
-com.example.cariinfoapp/
-├── data/
-│   ├── database/
-│   │   └── model/Article.kt
-│   ├── network/
-│   │   ├── client/RetrofitClient.kt
-│   │   ├── repository/InfoRepository.kt
-│   │   └── service/InfoApiService.kt
-├── ui/
-│   ├── features/
-│   │   ├── home/HomeScreen.kt
-│   │   ├── detail/DetailScreen.kt (Sprint 2)
-│   │   └── model/InfoViewModel.kt
-│   └── theme/
-│       ├── Color.kt, Theme.kt, Typography.kt
-└── MainActivity.kt
-```
+- 💾 **Offline Mode**
+   - Data berita disimpan di database lokal Room.
+   - Jika offline, aplikasi tetap dapat menampilkan data terakhir.
 
 ---
 
@@ -99,34 +56,85 @@ ViewModel (InfoViewModel)
    ↓
 Repository (InfoRepository)
    ↓
-Data Source (RetrofitClient → InfoApiService)
+Data Sources (Retrofit + Room)
 ```
+
+---
+
+## 📁 Struktur Project
+
+```
+com.example.cariinfoapp
+├── App.kt
+├── MainActivity.kt
+├── data
+│   ├── database
+│   │   └── model/ArticleModel.kt
+│   ├── local
+│   │   ├── ArticleMapper.kt
+│   │   ├── InfoDAO.kt
+│   │   ├── InfoDatabase.kt
+│   │   └── InfoEntity.kt
+│   └── network
+│       ├── client/InfoClient.kt
+│       ├── repository/InfoRepository.kt
+│       ├── response/InfoResponse.kt
+│       └── service/InfoAPIService.kt
+├── di
+│   ├── DatabaseModule.kt
+│   └── NetworkModule.kt
+├── ui
+│   ├── features
+│   │   ├── home
+│   │   │   ├── HomeScreen.kt
+│   │   │   ├── HomeContent.kt
+│   │   │   ├── HomeTopBar.kt
+│   │   │   └── components/ArticleCard.kt
+│   │   ├── detail
+│   │   │   ├── DetailScreen.kt
+│   │   │   ├── DetailContent.kt
+│   │   │   ├── DetailTopBar.kt
+│   │   │   ├── DetailEmptyView.kt
+│   │   │   └── components/DetailComponents.kt
+│   │   └── model/InfoViewModel.kt
+│   ├── navigation
+│   │   ├── AppNavHost.kt
+│   │   └── NavRoutes.kt
+│   ├── state/UiState.kt
+│   └── theme
+│       ├── Color.kt
+│       ├── MyColors.kt
+│       ├── Theme.kt
+│       └── Type.kt
+└── utils/Constants.kt
+```
+
+---
+
+## 🧪 Quality & Testing (Sprint 5 Review)
+
+✅ AppBar & Navigation modern (CenterAlignedTopAppBar)  
+✅ Swipe Refresh Material 3 menggantikan tombol refresh  
+✅ Shimmer Loading menggantikan CircularProgressIndicator  
+✅ Clean architecture dengan pemisahan `HomeContent`, `ArticleCard`, `DetailComponents`  
+✅ Dark mode toggle berfungsi penuh  
+✅ Error & Empty state UI responsif  
+✅ DetailScreen lebih ringkas & modular  
+✅ Semua sesuai dengan target Sprint 5 (UI/UX Polish & Presentation Ready)
 
 ---
 
 ## 🛠 Cara Menjalankan Project
 
-1. Clone repository:
-   ```bash
-   git clone https://github.com/username/CariInfoApp.git
-   ```
-2. Buka dengan **Android Studio (Arctic Fox / lebih baru)**  
-3. Sync Gradle & pastikan internet aktif (untuk fetch API).  
-4. Jalankan di emulator / perangkat fisik Android.
-
----
-
-
----
-
-## 👨‍💻 Kontributor
-- **Ayash Abdus Syahiid** — Mobile Developer (Android & Kotlin)  
-- Stack: Kotlin, XML, Jetpack Compose, Flutter, Swift (basic), PHP-MySQL (backend support)
+```bash
+git clone https://github.com/username/CariInfoApp.git
+cd CariInfoApp
+```
+1. Buka di **Android Studio Giraffe atau lebih baru**
+2. Pastikan internet aktif untuk memuat data API
+3. Jalankan pada emulator / perangkat fisik
 
 ---
 
 ## 📜 Lisensi
 MIT License © 2025 Ayash Abdus Syahiid
-
----
-
