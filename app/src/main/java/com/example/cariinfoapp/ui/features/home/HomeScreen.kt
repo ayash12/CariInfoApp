@@ -1,116 +1,59 @@
 package com.example.cariinfoapp.ui.features.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.example.cariinfoapp.data.database.model.Article
 import com.example.cariinfoapp.ui.features.model.InfoViewModel
-import com.example.cariinfoapp.ui.features.model.UiState
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: InfoViewModel = hiltViewModel(),
-               onArticleClick: (Article) -> Unit) {
-    val articles by viewModel.articles.collectAsState()
+fun HomeScreen(
+    viewModel: InfoViewModel = hiltViewModel(),
+    onArticleClick: (Article) -> Unit,
+    onToggleTheme: () -> Unit,
+    isDarkMode: Boolean
+) {
+    val articlesState by viewModel.articles.collectAsState()
+    val scope = rememberCoroutineScope()
+    val pullToRefreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.fetchTopHeadlines()
     }
+
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("CariInfoApp") })
+            HomeTopBar(
+                isDarkMode = isDarkMode,
+                onToggleTheme = onToggleTheme
+            )
         }
     ) { padding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
 
-            when (articles) {
-                is UiState.Loading -> LoadingView()
-                is UiState.Success -> {
-                    val list = (articles as UiState.Success).articles
-                    ArticleList(articles = list, onItemClick = onArticleClick)
-                }
-                is UiState.Error -> {
-                    ErrorView((articles as UiState.Error).message) { viewModel.fetchTopHeadlines() }
+        PullToRefreshBox (
+            state = pullToRefreshState,
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                scope.launch {
+                    isRefreshing = true
+                    viewModel.fetchTopHeadlines()
+                    isRefreshing = false
                 }
             }
-
-        }
-    }
-
-}
-
-@Composable
-fun LoadingView() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-fun ErrorView(message: String, onRetry: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Error: $message", color = MaterialTheme.colorScheme.error)
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = onRetry) { Text("Retry") }
-    }
-}
-
-@Composable
-fun ArticleList(
-    articles: List<Article>,
-    onItemClick: (Article) -> Unit
-) {
-    LazyColumn(contentPadding = PaddingValues(8.dp)) {
-        items(articles, key = { it.url ?: it.title ?: it.hashCode().toString() }) { article ->
-            ArticleCard(article = article, onClick = { onItemClick(article) })
-        }
-    }
-}
-
-@Composable
-fun ArticleCard(article: Article, onClick: () -> Unit,isLoading: Boolean = false) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .clickable(enabled = !isLoading) { if (!isLoading) onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(modifier = Modifier
-            .padding(12.dp)
-            .placeholder(visible = isLoading, highlight = PlaceholderHighlight.shimmer())
-        ) {
-            AsyncImage(
-                model = article.urlToImage,
-                contentDescription = article.title,
-                modifier = Modifier.size(88.dp),
-                placeholder = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder),
-                error = painterResource(id = com.example.cariinfoapp.R.drawable.placeholder)
+        ){
+            HomeContent(
+                modifier = Modifier.padding(padding),
+                state = articlesState,
+                onArticleClick = onArticleClick,
+                onRetry = { viewModel.fetchTopHeadlines() }
             )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = article.title ?: "No title", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(6.dp))
-                Text(text = article.description ?: "-", style = MaterialTheme.typography.bodyMedium, maxLines = 3)
-            }
         }
     }
 }
