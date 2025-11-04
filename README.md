@@ -116,7 +116,7 @@ com.example.cariinfoapp
 
 | Home Screen Light | Home Screen Dark | Detail Screen Light | Detail Screen Dark |
 |------------|------------|------------|------------|
-| ![HomeLight](https://github.com/username/CariInfoApp/assets/hs_light.png) | ![HomeDark](https://github.com/username/CariInfoApp/assets/hs_dark.png) | ![DetailLight](https://github.com/username/CariInfoApp/assets/ds_light.png) | ![DetailDark](https://github.com/username/CariInfoApp/assets/ds_dark.png) |
+| ![HomeLight](https://raw.githubusercontent.com/ayash12/CariInfoApp/main/assets/hs_light.png) | ![HomeDark](https://raw.githubusercontent.com/ayash12/CariInfoApp/main/assets/hs_dark.png) | ![DetailLight](https://raw.githubusercontent.com/ayash12/CariInfoApp/main/assets/ds_light.png) | ![DetailDark](https://raw.githubusercontent.com/ayash12/CariInfoApp/main/assets/ds_dark.png) |
 
 ---
 
